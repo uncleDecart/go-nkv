@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/google/uuid"
-	p "github.com/uncleDecart/go-nkv/pkg/protocol"
+	p "github.com/nkval/go-nkv/pkg/protocol"
 	"net"
 )
 

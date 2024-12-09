@@ -1,8 +1,8 @@
 package protocol_test
 
 import (
+	sdk "github.com/nkval/go-nkv/pkg/protocol"
 	"github.com/onsi/gomega"
-	sdk "github.com/uncleDecart/go-nkv/pkg/protocol"
 	"testing"
 )
 

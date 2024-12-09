@@ -10,12 +10,12 @@ it provides you with following API:
 - subscribe to the updates for the given key
 - unsubscribe from the updated for the given key
 
-nkv is a client/server solution. This repository is client for golang. For other clients, refer to [this](https://github.com/uncleDecart/nkv) repository.
+nkv is a client/server solution. This repository is client for golang. For other clients, refer to [this](https://github.com/nkval/nkv) repository.
 Also note that API is intented to be straightforward, so it shouldn't take you time to implement client using any programming language you like.
 
 ### What protocol does it use to communicate with server?
 
-Check out [this](https://github.com/uncleDecart/nkv/blob/main/docs/CLIENT_SERVER_PROTOCOL.md) document
+Check out [this](https://github.com/nkval/nkv/blob/main/docs/CLIENT_SERVER_PROTOCOL.md) document
 
 ### When should I use it?
 When you have some shared state between services/processes and you also want to be notified when the value is changed
@@ -28,7 +28,7 @@ You can run it as a separate binary (checkout cmd folder) or you can use it in y
 ```golang
 
 import (
-	"github.com/uncleDecart/go-nkv/pkg/client"
+	"github.com/nkval/go-nkv/pkg/client"
 )
 
 // ...
