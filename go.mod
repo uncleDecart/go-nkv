@@ -1,4 +1,4 @@
-module github.com/uncleDecart/go-nkv
+module github.com/nkval/go-nkv
 
 go 1.23.1
 

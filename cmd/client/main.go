@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/uncleDecart/go-nkv/pkg/client"
-	"github.com/uncleDecart/go-nkv/pkg/protocol"
+	"github.com/nkval/go-nkv/pkg/client"
+	"github.com/nkval/go-nkv/pkg/protocol"
 )
 
 const DEFAULT_URL = "127.0.0.1:4222"
