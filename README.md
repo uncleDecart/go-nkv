@@ -26,6 +26,13 @@ You can run it as a separate binary (checkout cmd folder) or you can use it in y
 
 
 ```golang
+
+import (
+	"github.com/uncleDecart/go-nkv/pkg/client"
+)
+
+// ...
+
 client := client.NewClient("127.0.0.1:4222")
 key := "key1"
 value := "bazinga"
