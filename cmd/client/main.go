@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -11,12 +12,14 @@ import (
 	"github.com/nkval/go-nkv/pkg/protocol"
 )
 
-const DEFAULT_URL = "127.0.0.1:4222"
-
 func main() {
+	var url string
+	flag.StringVar(&url, "url", "/var/run/shared/nkv.sock", "Path to Unix domain socket file")
+	flag.Parse()
+
 	fmt.Println("Please enter the command words separated by whitespace, finish with a character return. Enter HELP for help:")
 
-	client := client.NewClient(DEFAULT_URL)
+	client := client.NewClient(url)
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Enter command: ")
