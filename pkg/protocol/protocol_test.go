@@ -134,9 +134,9 @@ func TestMarsalResponse(t *testing.T) {
 	resp = &sdk.Response{
 		RequestID: "12345",
 		Status:    true,
-		Data:      []byte{98, 97, 122, 105, 110, 103, 97, 10},
+		Data:      map[string][]byte{"key1": {98, 97, 122, 105, 110, 103, 97, 10}},
 	}
-	expected = "12345 OK YmF6aW5nYQo="
+	expected = "12345 OK key1 YmF6aW5nYQo="
 	g.Expect(sdk.MarshalResponse(resp), expected)
 }
 
@@ -150,18 +150,18 @@ func TestUnmarshalResponse(t *testing.T) {
 		&sdk.Response{
 			RequestID: "12345",
 			Status:    false,
-			Data:      []byte{},
+			Data:      make(map[string][]byte),
 		},
 	))
 
-	input = "12345 OK YmF6aW5nYQo="
+	input = "12345 OK key1 YmF6aW5nYQo="
 	resp, err = sdk.UnmarshalResponse(input)
 	g.Expect(err).To(gomega.BeNil())
 	g.Expect(resp).To(gomega.BeEquivalentTo(
 		&sdk.Response{
 			RequestID: "12345",
 			Status:    true,
-			Data:      []byte{98, 97, 122, 105, 110, 103, 97, 10},
+			Data:      map[string][]byte{"key1": {98, 97, 122, 105, 110, 103, 97, 10}},
 		},
 	))
 }
