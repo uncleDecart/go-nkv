@@ -39,7 +39,7 @@ func (s *Subscriber) Start() {
 }
 
 func (s *Subscriber) connect() error {
-	conn, err := net.Dial("tcp", s.addr)
+	conn, err := net.Dial("unix", s.addr)
 	if err != nil {
 		return fmt.Errorf("Failed to connect to server: %v\n", err)
 	}

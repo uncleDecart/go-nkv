@@ -78,7 +78,7 @@ func MarshalRequest(cmd *Request) string {
 type Response struct {
 	RequestID string
 	Status    bool
-	Data      []byte // Decoded data (if present)
+	Data      map[string][]byte // Decoded data (if present)
 }
 
 func UnmarshalResponse(input string) (*Response, error) {
@@ -97,20 +97,19 @@ func UnmarshalResponse(input string) (*Response, error) {
 		return nil, fmt.Errorf("invalid input: status is not recognized. Expected OK or FAILED got %s", parts[1])
 	}
 
-	data := []byte{}
-	var err error
-	if len(parts) > 2 {
-		encoded := parts[2]
-		data, err = base64.StdEncoding.DecodeString(encoded)
+	decodedParts := make(map[string][]byte)
+	for i := 2; i < len(parts)-1; i += 2 {
+		data, err := base64.StdEncoding.DecodeString(parts[i+1])
 		if err != nil {
 			return nil, fmt.Errorf("Error decoding Base64: %v", err)
 		}
+		decodedParts[parts[i]] = data
 	}
 
 	return &Response{
 		RequestID: parts[0],
 		Status:    status,
-		Data:      data,
+		Data:      decodedParts,
 	}, nil
 }
 
@@ -122,9 +121,18 @@ func MarshalResponse(resp *Response) string {
 		status = "FAILED"
 	}
 
-	if len(resp.Data) > 0 {
-		encoded := base64.StdEncoding.EncodeToString(resp.Data)
-		return fmt.Sprintf("%s %s %s", resp.RequestID, status, encoded)
+	var b strings.Builder
+	for k, v := range resp.Data {
+		decoded := base64.StdEncoding.EncodeToString(v)
+		b.WriteString(k)
+		b.WriteByte(' ')
+		b.WriteString(decoded)
+		b.WriteByte(' ')
+	}
+
+	data := strings.TrimSpace(b.String())
+	if len(data) > 0 {
+		return fmt.Sprintf("%s %s %s", resp.RequestID, status, data)
 	} else {
 		return fmt.Sprintf("%s %s", resp.RequestID, status)
 	}
@@ -138,11 +146,24 @@ func MarshalResponseDebug(resp *Response) string {
 		status = "FAILED"
 	}
 
-	if utf8.Valid(resp.Data) {
-		return fmt.Sprintf("%s %s %s", resp.RequestID, status, string(resp.Data))
-	} else {
-		return fmt.Sprintf("%s %s %v", resp.RequestID, status, resp.Data)
+	var b strings.Builder
+	for k, d := range resp.Data {
+		b.WriteString(k)
+		b.WriteByte(' ')
+		if utf8.Valid(d) {
+			b.WriteString(string(d))
+		} else {
+			decoded := base64.StdEncoding.EncodeToString(d)
+			b.WriteString(decoded)
+		}
+		b.WriteByte(' ')
+	}
 
+	data := strings.TrimSpace(b.String())
+	if len(data) > 0 {
+		return fmt.Sprintf("%s %s %s", resp.RequestID, status, data)
+	} else {
+		return fmt.Sprintf("%s %s", resp.RequestID, status)
 	}
 }
 
