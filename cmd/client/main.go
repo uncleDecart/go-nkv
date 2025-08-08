@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var url string
-	flag.StringVar(&url, "url", "/var/run/shared/nkv.sock", "Path to Unix domain socket file")
+	flag.StringVar(&url, "url", "/tmp/nkv/nkv.sock", "Path to Unix domain socket file")
 	flag.Parse()
 
 	fmt.Println("Please enter the command words separated by whitespace, finish with a character return. Enter HELP for help:")
@@ -41,8 +41,8 @@ func main() {
 			fmt.Printf("Received update:\n%s\n", protocol.MarshalNotification(&msg))
 		}
 
-		switch parts[0] {
-		case "PUT":
+		switch strings.ToLower(parts[0]) {
+		case "put":
 			if len(parts) < 3 {
 				fmt.Println("PUT requires a key and a value")
 				continue
@@ -55,7 +55,7 @@ func main() {
 			} else {
 				fmt.Printf("Request took %d\nerror: %v\n", elapsed.Milliseconds(), err)
 			}
-		case "GET":
+		case "get":
 			start := time.Now()
 			resp, err := client.Get(parts[1])
 			elapsed := time.Since(start)
@@ -64,7 +64,7 @@ func main() {
 			} else {
 				fmt.Printf("Request took %d\nerror: %v\n", elapsed.Milliseconds(), err)
 			}
-		case "DELETE":
+		case "delete":
 			start := time.Now()
 			resp, err := client.Delete(parts[1])
 			elapsed := time.Since(start)
@@ -73,7 +73,7 @@ func main() {
 			} else {
 				fmt.Printf("Request took %d\nerror: %v\n", elapsed.Milliseconds(), err)
 			}
-		case "SUBSCRIBE":
+		case "subscribe":
 			start := time.Now()
 			resp, err := client.Subscribe(parts[1], printUpdate)
 			elapsed := time.Since(start)
@@ -82,7 +82,7 @@ func main() {
 			} else {
 				fmt.Printf("Request took %d\nerror: %v\n", elapsed.Milliseconds(), err)
 			}
-		case "UNSUBSCRIBE":
+		case "unsubscribe":
 			start := time.Now()
 			resp, err := client.Unsubscribe(parts[1])
 			elapsed := time.Since(start)
@@ -91,9 +91,9 @@ func main() {
 			} else {
 				fmt.Printf("Request took %d\nerror: %v\n", elapsed.Milliseconds(), err)
 			}
-		case "QUIT":
-			break
-		case "HELP":
+		case "quit":
+			return
+		case "help":
 			fmt.Println("Commands:")
 			fmt.Println("PUT key value")
 			fmt.Println("GET key")
