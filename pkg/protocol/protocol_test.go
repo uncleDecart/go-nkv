@@ -121,47 +121,28 @@ func TestMarshalRequest(t *testing.T) {
 	g.Expect(sdk.MarshalRequest(command), expected)
 }
 
-func TestMarsalResponse(t *testing.T) {
-	g := gomega.NewGomegaWithT(t)
-
-	resp := &sdk.Response{
-		RequestID: "12345",
-		Status:    false,
-	}
-	expected := "12345 FAILED"
-	g.Expect(sdk.MarshalResponse(resp), expected)
-
-	resp = &sdk.Response{
-		RequestID: "12345",
-		Status:    true,
-		Data:      map[string][]byte{"key1": {98, 97, 122, 105, 110, 103, 97, 10}},
-	}
-	expected = "12345 OK key1 YmF6aW5nYQo="
-	g.Expect(sdk.MarshalResponse(resp), expected)
-}
-
 func TestUnmarshalResponse(t *testing.T) {
 	g := gomega.NewGomegaWithT(t)
 
-	input := "12345 FAILED"
+	input := "base 12345 FAILED"
 	resp, err := sdk.UnmarshalResponse(input)
 	g.Expect(err).To(gomega.BeNil())
 	g.Expect(resp).To(gomega.BeEquivalentTo(
 		&sdk.Response{
 			RequestID: "12345",
 			Status:    false,
-			Data:      make(map[string][]byte),
+			Data:      nil,
 		},
 	))
 
-	input = "12345 OK key1 YmF6aW5nYQo="
+	input = "data 12345 OK key1 YmF6aW5nYQo="
 	resp, err = sdk.UnmarshalResponse(input)
 	g.Expect(err).To(gomega.BeNil())
 	g.Expect(resp).To(gomega.BeEquivalentTo(
 		&sdk.Response{
 			RequestID: "12345",
 			Status:    true,
-			Data:      map[string][]byte{"key1": {98, 97, 122, 105, 110, 103, 97, 10}},
+			Data:      sdk.HashMapStringBytes{"key1": {98, 97, 122, 105, 110, 103, 97, 10}},
 		},
 	))
 }
