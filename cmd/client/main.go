@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Println("Please enter the command words separated by whitespace, finish with a character return. Enter HELP for help:")
 
-	client := client.NewClient(url)
+	client := client.NewClient(url, "")
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Println("Enter command: ")
